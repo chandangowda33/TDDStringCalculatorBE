@@ -19,4 +19,14 @@ describe("GET /calculate/:string", () => {
       result: 5,
     });
   });
+
+  // 2. Handle any amount of numbers
+  it("should return the sum of any amount of numbers", async () => {
+    const response = await request(app).get("/calculate/1,2,3,4,5");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      status: "Success",
+      result: 15,
+    });
+  });
 });

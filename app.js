@@ -13,10 +13,10 @@ app.get("/calculate/:string", (req, res) => {
   //initially delimiter is ','
   let numberArray = numberString.split(",");
 
-  //step 1: when only upto 2 numbers
-  //checking if input string have only one number
-  if (numberArray.length === 1) result = parseInt(numberArray[0]);
-  else result = parseInt(numberArray[0]) + parseInt(numberArray[1]);
+  result = numberArray.reduce(
+    (total, number) => (total += parseInt(number)),
+    0
+  );
 
   try {
     res.status(200).json({
