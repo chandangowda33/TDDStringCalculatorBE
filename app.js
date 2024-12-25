@@ -18,7 +18,15 @@ app.get("/calculate", (req, res) => {
 
   if (numberString.startsWith("//")) {
     const parts = numberString.split("\n");
-    delimiter = new RegExp(parts[0][2]);
+    const delimiterPart = parts[0].substring(2);
+    if (delimiterPart.startsWith("[") && delimiterPart.endsWith("]")) {
+      const delimiterPattern = delimiterPart.slice(1, -1);
+      delimiter = new RegExp(
+        delimiterPattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")
+      );
+    } else {
+      delimiter = new RegExp(delimiterPart);
+    }
     numberString = parts[1];
   }
 
@@ -32,10 +40,10 @@ app.get("/calculate", (req, res) => {
     });
   }
 
-  result = numberArray.reduce(
-    (total, number) => (total += parseInt(number)),
-    0
-  );
+  let smallNumArray = numberArray
+    .map((num) => parseInt(num))
+    .filter((num) => parseInt(num) < 1000);
+  result = smallNumArray.reduce((total, number) => (total += number), 0);
 
   try {
     res.status(200).json({

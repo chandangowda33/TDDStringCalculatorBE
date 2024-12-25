@@ -38,4 +38,16 @@ describe("String Calculator API", () => {
     expect(response.status).toBe(400);
     expect(response.body.message).toBe("Negative numbers not allowed: -1,-3");
   });
+  test("should ignore numbers bigger than 1000", async () => {
+    const response = await request(app).get("/calculate?string=2,1001");
+    expect(response.status).toBe(200);
+    expect(response.body.result).toBe(2);
+  });
+  test("should handle custom delimiters of any length", async () => {
+    const response = await request(app).get(
+      "/calculate?string=//[***]\\n1***2***3"
+    );
+    expect(response.status).toBe(200);
+    expect(response.body.result).toBe(6);
+  });
 });
